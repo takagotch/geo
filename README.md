@@ -71,10 +71,26 @@ public class DatabaseTest {
     st.close();
   }
   
-  private Connection createDatabase() throws IOException, SQLException {}
+  private Connection createDatabase() throws IOException, SQLException {
+    File dir = new File("target/db");
+    FileUtils.deleteDirectory(dir);
+    dir.mkdir();
+    String script = IOUtils.toString(
+        DatabaseTest.class.getResourceAsStream("/create.sql"), "UTF-8");
+    String[] commands = scripts.split(";");
+    Connection con = DriverManager.getConnection(url, "sa", "");
+    for (String command : commands) {
+      execute(con, command);
+    }
+    return con;
+  }
   
   private void createIndexes(Connection con) throws SQLException {
-  
+    System.out.println();
+    execute(con, "crate index idx_report_time on report(time)");
+    for (int i = 1; i <= 12; i++)
+      execute(con, "create index idx_geohash_" + i + " on report(geohash"
+        + i + ")");
   }
   
   private void processQuery(long now, Connection con, String sql)
