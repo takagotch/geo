@@ -134,7 +134,16 @@ public class DatabaseTest {
 ---
 
 
-```
+```js
+navigator.geolocation.getCurrentPosition(successCallback,
+  errorCallback,
+  {maximumAge:Infinity, timeout:0});
+function successCallback(position) {
+  if (position.timestamp < freshness_threshold &&
+    position.coords.accuracy < accuracy_threshold) {  
+  } else {
+  }
+}
 ```
 
 ```
